@@ -1,12 +1,6 @@
-# Hello, world! - From Spark and Scala
-#
-# This is an example package which compiles
-# a hello function in scala and deploys it
-# to spark using sparklyr.
-#
-# You can learn more about sparklyr at:
-#
-#   http://spark.rstudio.com/
+# Kudu Sparklyr Extension
+# Intended to provide access to Kudu tables in Sparklyr
+# 
 #
 
 #' @import sparklyr
