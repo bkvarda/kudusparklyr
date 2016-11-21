@@ -2,8 +2,12 @@
 
 export(delete_kudu_table)
 export(kudu_context)
+export(kudu_delete_rows)
+export(kudu_insert_ignore_rows)
 export(kudu_insert_rows)
 export(kudu_table_exists)
+export(kudu_update_rows)
+export(kudu_upsert_rows)
 export(read_kudu_table)
 import(magrittr)
 import(sparklyr)

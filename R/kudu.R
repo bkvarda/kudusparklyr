@@ -60,6 +60,7 @@ kudu_update_rows <- function(sc,df,kudu_table){
   resp <- get_kudu_context(sc) %>% invoke("updateRows",df,kudu_table)
   exists("resp")  
 }
+#'@export
 kudu_delete_rows <- function(sc,df,kudu_table){
   resp <- get_kudu_context(sc) %>% invoke("deleteRows",df,kudu_table)
   exists("resp")  
