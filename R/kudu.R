@@ -34,6 +34,11 @@ read_kudu_table <- function(sc,kudu_table) {
 kudu_table_exists <- function(sc,kudu_table){
   get_kudu_context(sc) %>% invoke("tableExists",kudu_table)
 }
+#' @export
+create_kudu_table <- function(sc,table_name,schema,keys,options){
+  get_kudu_context(sc) %>% invoke("createTable",table_name,schema,keys,options) 
+    
+}
 
 #' @export
 delete_kudu_table <- function(sc,kudu_table){
@@ -42,28 +47,32 @@ delete_kudu_table <- function(sc,kudu_table){
 }
 #' @export
 kudu_insert_rows <- function(sc,df,kudu_table){
-  resp <- get_kudu_context(sc) %>% invoke("insertRows",df,kudu_table)
+  resp <- get_kudu_context(sc) %>% invoke("insertRows",spark_dataframe(df),kudu_table)
   exists("resp")
 }
 #'@export
 kudu_insert_ignore_rows <- function(sc,df,kudu_table){
-  resp <- get_kudu_context(sc) %>% invoke("insertIgnoreRows",df,kudu_table)
+  resp <- get_kudu_context(sc) %>% invoke("insertIgnoreRows",spark_dataframe(df),kudu_table)
   exists("resp")
 }
 #'@export
 kudu_upsert_rows <- function(sc,df,kudu_table){
-  resp <- get_kudu_context(sc) %>% invoke("upsertRows",df,kudu_table)
+  resp <- get_kudu_context(sc) %>% invoke("upsertRows",spark_dataframe(df),kudu_table)
   exists("resp")
 }
 #'@export
 kudu_update_rows <- function(sc,df,kudu_table){
-  resp <- get_kudu_context(sc) %>% invoke("updateRows",df,kudu_table)
+  resp <- get_kudu_context(sc) %>% invoke("updateRows",spark_dataframe(df),kudu_table)
   exists("resp")  
 }
 #'@export
 kudu_delete_rows <- function(sc,df,kudu_table){
-  resp <- get_kudu_context(sc) %>% invoke("deleteRows",df,kudu_table)
+  resp <- get_kudu_context(sc) %>% invoke("deleteRows",spark_dataframe(df),kudu_table)
   exists("resp")  
+}
+#'@export
+sdf_schema <- function(df){
+  spark_dataframe(df) %>% invoke("schema")
 }
 
 get_kudu_context <- function(sc){
