@@ -73,9 +73,8 @@ get_kudu_table(sc,tbl_name)
 Get Impala DDL for a table
 ```R
 get_impala_ddl(sc,tbl)
-```
-#Example:
-```R
+
+#Example 
 tbl <- get_kudu_table(sc,"particle_test")
 get_impala_ddl(sc,tbl)
 ```
