@@ -3,6 +3,8 @@
 export(add_hash_partitions)
 export(create_kudu_table)
 export(delete_kudu_table)
+export(get_impala_ddl)
+export(get_kudu_table)
 export(kudu_context)
 export(kudu_delete_rows)
 export(kudu_insert_ignore_rows)

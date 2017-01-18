@@ -1,10 +1,10 @@
-####Kudusparklyr
-###A Sparklyr extention for Kudu
+###Kudusparklyr
+####A Sparklyr extention for Kudu
 
-#####Introduction
+####Introduction
 [Sparklyr](http://spark.rstudio.com/index.html) is an R interface for Apache Spark that is highly extensible. [Apache Kudu](http://kudu.apache.org/) is a new storage engine that enables fast analytics on fast data and fits use cases in the Hadoop ecosystem where you need to frequently update/delete data while also servicing analytical queries as it comes in (NRT). Kudusparklyr is a Sparklyr extension that leverages the [Kudu integration with Spark](https://github.com/cloudera/kudu/tree/master/java/kudu-spark) to make working with Kudu in an R environment easier. Usage requires Spark, Kudu, and Sparklyr and supports Spark 1.6 today. 
 
-#####Installation
+####Installation
 Install through devtools:
 ```R
 library(devtools)
@@ -16,7 +16,7 @@ library(devtools)
 load_all('/path/to/kudusparklyr')
 ```
 
-#####Functions
+####Functions
 Create a KuduContext and append it to a sparklyr spark_connection object. 
 ```R
 kudu_context(sc,kudu_master)
@@ -66,9 +66,21 @@ create_kudu_table(sc,tbl_name,schema,key_columns,kudu_options)
 #Example:
 create_kudu_table(sc, 'batting_table',schema,list("playerID","yearID","teamID"),options)
 ```
+Get a kudu table object
+```R
+get_kudu_table(sc,tbl_name)
+```
+Get Impala DDL for a table
+```R
+get_impala_ddl(sc,tbl)
+```
+#Example:
+```R
+tbl <- get_kudu_table(sc,"particle_test")
+get_impala_ddl(sc,tbl)
+```
 
-
-#####Example
+####Example
 ```R
 
 library(devtools)
@@ -171,5 +183,5 @@ kudu_table_exists(sc, 'batting_table')
 
 ```
 
-#####Limitations
+####Limitations
 
