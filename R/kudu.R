@@ -1,3 +1,5 @@
+
+
 # Kudu Sparklyr Extension
 # Intended to provide access to Kudu tables in Sparklyr
 #
@@ -6,6 +8,12 @@
 #' @import sparklyr
 #' @import magrittr
 
+#' @title kudu_context
+#' @description creates kc kudu context
+#' 
+#' @param sc 
+#' @param kudu_master 
+#'
 #' @export
 kudu_context <- function(sc,kudu_master) {
   kc <- invoke_new(sc,"org.apache.kudu.spark.kudu.KuduContext",kudu_master)
@@ -15,6 +23,17 @@ kudu_context <- function(sc,kudu_master) {
   new_sc
 }
 
+#' @title read_kudu_table
+#' @description reads a kudu table into spark
+#' 
+#' @param sc spark connection
+#' @param kudu_table name of kudu table
+#'
+#' @examples
+#' #'  \dontrun{
+#' table <- read_kudu_table(sc, "table_name")
+#' }
+#' 
 #' @export
 read_kudu_table <- function(sc,kudu_table) {
   hc <- sc$hive_context
@@ -30,25 +49,73 @@ read_kudu_table <- function(sc,kudu_table) {
   df
 }
 
+#' @title kudu_table_exists
+#' @description checks if a kudu table exists
+#' 
+#' @param sc spark connection
+#' @param kudu_table name of kudu table
+#' 
+#' @examples
+#' #'  \dontrun{
+#' kudu_table_exists(sc, "table_name")
+#' }
+#'
 #' @export
 kudu_table_exists <- function(sc,kudu_table){
   get_kudu_context(sc) %>% invoke("tableExists",kudu_table)
 }
+
+#' @title create_kudu_table
+#' @description creates a kudu table
+#' 
+#' @param sc spark connection
+#' @param table_name table name
+#' @param schema database in hive 
+#' @param keys key columns
+#' @param options additional options 
+#'
 #' @export
 create_kudu_table <- function(sc,table_name,schema,keys,options){
   get_kudu_context(sc) %>% invoke("createTable",table_name,schema,keys,options)
 
 }
+
+#' @title delete_kudu_table
+#' @description deletes a kudu table
+#' 
+#' @param sc spark connection
+#'
+#' @param kudu_table table name
+#'
 #' @export
 delete_kudu_table <- function(sc,kudu_table){
   resp <- sc$kudu_context %>% invoke("deleteTable",kudu_table)
   exists("resp")
 }
+
+#' @title get_kudu_table
+#' @description gets a kudu table
+#' 
+#' @param sc spark connection
+#' @param kudu_table kudu table name
+#'
 #' @export
 get_kudu_table <- function(sc,kudu_table){
   tbl <- sc$kudu_context %>% invoke("syncClient") %>% invoke("openTable",kudu_table)
   tbl
 }
+
+#' @title get_impala_ddl
+#' @description builds impala sql for table creation
+#' 
+#' @param sc spark connection
+#' @param kudu_table kudu table name
+#'
+#' @examples
+#' #'  \dontrun{
+#' table_dll <- get_impala_ddl(sc, "table_name")
+#' }
+#'
 #' @export
 get_impala_ddl <- function(sc,kudu_table){
   master <- sc$kudu_master
@@ -93,41 +160,106 @@ get_impala_ddl <- function(sc,kudu_table){
   }
   keys_str <- paste(keys,collapse=",")
   ddl <- sprintf("CREATE EXTERNAL TABLE `%s` (%s) TBLPROPERTIES('storage_handler'='%s','kudu.table_name'='%s','kudu.master_addresses'='%s','kudu.key_columns'='%s');",tbl_name,schema_str,handler,tbl_name,master,keys_str)
-  ddl
+  return(ddl)
 }
+
+#' @title kudu_insert_rows
+#' @description inserts rows into a kudu table
+#' 
+#' @param sc spark connection
+#' @param df spark dataframe
+#' @param kudu_table table name
+#'
 #' @export
 kudu_insert_rows <- function(sc,df,kudu_table){
   resp <- get_kudu_context(sc) %>% invoke("insertRows",spark_dataframe(df),kudu_table)
   exists("resp")
 }
+
+#' @title kudu_insert_ignore_rows
+#' @description inserts rows into a kudu table
+#' 
+#' @param sc spark connection
+#' @param df spark dataframe
+#' @param kudu_table table name
+#'
 #'@export
 kudu_insert_ignore_rows <- function(sc,df,kudu_table){
   resp <- get_kudu_context(sc) %>% invoke("insertIgnoreRows",spark_dataframe(df),kudu_table)
   exists("resp")
 }
+
+
+#' @title kudu_upsert_rows
+#' @description upserts rows into a kudu table
+#' 
+#' @param sc spark connection
+#' @param df spark dataframe
+#' @param kudu_table table name
+#'
 #'@export
 kudu_upsert_rows <- function(sc,df,kudu_table){
   resp <- get_kudu_context(sc) %>% invoke("upsertRows",spark_dataframe(df),kudu_table)
   exists("resp")
 }
+
+
+#' @title kudu_update_rows
+#' @description updates rows into a kudu table
+#' 
+#' @param sc spark connection
+#' @param df spark dataframe
+#' @param kudu_table table name
+#'
 #'@export
 kudu_update_rows <- function(sc,df,kudu_table){
   resp <- get_kudu_context(sc) %>% invoke("updateRows",spark_dataframe(df),kudu_table)
   exists("resp")
 }
+
+#' @title kudu_delete_rows
+#' @description deletes rows into a kudu table
+#' 
+#' @param sc spark connection
+#' @param df spark dataframe
+#' @param kudu_table table name
+#'
 #'@export
 kudu_delete_rows <- function(sc,df,kudu_table){
   resp <- get_kudu_context(sc) %>% invoke("deleteRows",spark_dataframe(df),kudu_table)
   exists("resp")
 }
+
+#' @title sdf_schema
+#' @description gets spark data frame schema
+#' 
+#' @param df spark data frame
+#'
 #'@export
 sdf_schema <- function(df){
   spark_dataframe(df) %>% invoke("schema")
 }
 
+#' @title get_kudu_context
+#'
+#' @param sc spark connection
+#'
+#' @return
+#' @export
+#'
 get_kudu_context <- function(sc){
   sc$kudu_context
 }
+
+
+#' @title add_sql_context
+#'
+#' @param sc spark connection
+#'
+#' @return
+#' @export
+#'
+#' @examples
 add_sql_context <- function(sc){
   jsc <- sc$java_context
   sql_context <- invoke_static(
