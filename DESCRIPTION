@@ -12,4 +12,4 @@ Imports:
     magrittr
 Description: Sparklyr extension for Kudu support
 License: MIT
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
