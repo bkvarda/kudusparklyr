@@ -4,12 +4,14 @@
 \alias{get_impala_ddl}
 \title{get_impala_ddl}
 \usage{
-get_impala_ddl(sc, kudu_table)
+get_impala_ddl(sc, kudu_table, beta = FALSE)
 }
 \arguments{
 \item{sc}{spark connection}
 
 \item{kudu_table}{kudu table name}
+
+\item{beta}{set to TRUE if using beta Impala-Kudu (default = FALSE)}
 }
 \description{
 builds impala sql for table creation
@@ -17,6 +19,7 @@ builds impala sql for table creation
 \examples{
 #'  \dontrun{
 table_dll <- get_impala_ddl(sc, "table_name")
+table_ddl <- get_impala_ddl(sc, "table_name", beta=TRUE)
 }
 
 }

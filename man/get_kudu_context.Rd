@@ -9,3 +9,6 @@ get_kudu_context(sc)
 \arguments{
 \item{sc}{spark connection}
 }
+\value{
+kudu context object
+}

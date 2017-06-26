@@ -4,4 +4,6 @@
 .Ruserdata
 *.log
 *.Rproj
-
+metastore_db/*
+metastore_db
+*metastore_db

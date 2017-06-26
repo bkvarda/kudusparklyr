@@ -9,3 +9,9 @@ add_sql_context(sc)
 \arguments{
 \item{sc}{spark connection}
 }
+\value{
+spark connection
+}
+\examples{
+not used
+}

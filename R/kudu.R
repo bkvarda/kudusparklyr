@@ -90,7 +90,7 @@ create_kudu_table <- function(sc,table_name,schema,keys,options){
 #' @export
 delete_kudu_table <- function(sc,kudu_table){
   resp <- sc$kudu_context %>% invoke("deleteTable",kudu_table)
-  exists("resp")
+  resp
 }
 
 #' @title get_kudu_table
@@ -110,20 +110,23 @@ get_kudu_table <- function(sc,kudu_table){
 #' 
 #' @param sc spark connection
 #' @param kudu_table kudu table name
+#' @param beta set to TRUE if using beta Impala-Kudu (default = FALSE)
 #'
 #' @examples
 #' #'  \dontrun{
 #' table_dll <- get_impala_ddl(sc, "table_name")
+#' table_ddl <- get_impala_ddl(sc, "table_name", beta=TRUE)
 #' }
 #'
 #' @export
-get_impala_ddl <- function(sc,kudu_table){
+get_impala_ddl <- function(sc,kudu_table,beta=FALSE){
   master <- sc$kudu_master
   handler <- "com.cloudera.kudu.hive.KuduStorageHandler"
   tbl_name <- kudu_table %>% invoke("getName")
   keys <- c()
   schema_str <- ""
-
+  
+  if(beta){
   columns <- kudu_table %>% invoke("getSchema") %>% invoke("getColumns") %>% invoke("toArray")
   for(col in columns){
     name <- col %>% invoke("getName")
@@ -131,7 +134,7 @@ get_impala_ddl <- function(sc,kudu_table){
     type <- col %>% invoke("getType") %>% invoke("getName")
 
     #Certain types are different between Kudu and Impala
-
+  
     if(type == "int32"){
       type <- "int"
     }
@@ -160,6 +163,12 @@ get_impala_ddl <- function(sc,kudu_table){
   }
   keys_str <- paste(keys,collapse=",")
   ddl <- sprintf("CREATE EXTERNAL TABLE `%s` (%s) TBLPROPERTIES('storage_handler'='%s','kudu.table_name'='%s','kudu.master_addresses'='%s','kudu.key_columns'='%s');",tbl_name,schema_str,handler,tbl_name,master,keys_str)
+  }
+  else{
+  ddl <- sprintf("CREATE EXTERNAL TABLE `%s` STORED AS KUDU TBLPROPERTIES('kudu.table_name'='%s','kudu.master_addresses'='%s');",tbl_name,tbl_name,master)
+  }
+  
+  
   return(ddl)
 }
 
@@ -173,7 +182,7 @@ get_impala_ddl <- function(sc,kudu_table){
 #' @export
 kudu_insert_rows <- function(sc,df,kudu_table){
   resp <- get_kudu_context(sc) %>% invoke("insertRows",spark_dataframe(df),kudu_table)
-  exists("resp")
+  resp
 }
 
 #' @title kudu_insert_ignore_rows
@@ -186,7 +195,7 @@ kudu_insert_rows <- function(sc,df,kudu_table){
 #'@export
 kudu_insert_ignore_rows <- function(sc,df,kudu_table){
   resp <- get_kudu_context(sc) %>% invoke("insertIgnoreRows",spark_dataframe(df),kudu_table)
-  exists("resp")
+  resp
 }
 
 
@@ -200,7 +209,7 @@ kudu_insert_ignore_rows <- function(sc,df,kudu_table){
 #'@export
 kudu_upsert_rows <- function(sc,df,kudu_table){
   resp <- get_kudu_context(sc) %>% invoke("upsertRows",spark_dataframe(df),kudu_table)
-  exists("resp")
+  resp
 }
 
 
@@ -214,7 +223,7 @@ kudu_upsert_rows <- function(sc,df,kudu_table){
 #'@export
 kudu_update_rows <- function(sc,df,kudu_table){
   resp <- get_kudu_context(sc) %>% invoke("updateRows",spark_dataframe(df),kudu_table)
-  exists("resp")
+  resp
 }
 
 #' @title kudu_delete_rows
@@ -227,7 +236,7 @@ kudu_update_rows <- function(sc,df,kudu_table){
 #'@export
 kudu_delete_rows <- function(sc,df,kudu_table){
   resp <- get_kudu_context(sc) %>% invoke("deleteRows",spark_dataframe(df),kudu_table)
-  exists("resp")
+  resp
 }
 
 #' @title sdf_schema
@@ -240,11 +249,23 @@ sdf_schema <- function(df){
   spark_dataframe(df) %>% invoke("schema")
 }
 
+#' @title sdf_take
+#' @description take sample of dataframe contents
+#' 
+#' @param df dataframe
+#' @param n number of rows to take, defaults to 20
+#'
+#'@export
+sdf_show <- function(df){
+  spark_dataframe(df) %>% invoke("show")
+}
+
+
 #' @title get_kudu_context
 #'
 #' @param sc spark connection
 #'
-#' @return
+#' @return kudu context object
 #' @export
 #'
 get_kudu_context <- function(sc){
@@ -256,10 +277,10 @@ get_kudu_context <- function(sc){
 #'
 #' @param sc spark connection
 #'
-#' @return
+#' @return spark connection
 #' @export
 #'
-#' @examples
+#' @examples not used
 add_sql_context <- function(sc){
   jsc <- sc$java_context
   sql_context <- invoke_static(
