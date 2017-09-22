@@ -16,6 +16,15 @@ library(devtools)
 load_all('/path/to/kudusparklyr')
 ```
 
+#### Specifying Kudu version
+The Kudu/Spark integration is made available through JARs that come as part of this package. Currently, the only JARs that are made part of the project are those that are requested by people that use this package - so if you need a new version, let me know. The default Kudu version that is loaded is 1.3.1 in order to maintain backwards compatibility for users - this may change eventually. In order to use the JAR for a specific version of Kudu, you will need to set options before you create the spark connection:
+
+```
+library(kudusparklyr)
+options(kudu.version = "1.4.0")
+sc <- spark_connect(master="yarn-client",version="2.1", config = list(default = list(spark.yarn.keytab="/home/ec2-user/navi.keytab",spark.yarn.principal="navi@CLOUDERA.INTERNAL")))
+```
+
 #### Functions
 Create a KuduContext and append it to a sparklyr spark_connection object. 
 ```R
