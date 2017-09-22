@@ -239,25 +239,15 @@ kudu_delete_rows <- function(sc,df,kudu_table){
   resp
 }
 
-#' @title sdf_schema
-#' @description gets spark data frame schema
-#' 
-#' @param df spark data frame
-#'
-#'@export
-sdf_schema <- function(df){
-  spark_dataframe(df) %>% invoke("schema")
-}
-
-#' @title sdf_take
-#' @description take sample of dataframe contents
+#' @title sdf_head
+#' @description show first row of dataframe content
 #' 
 #' @param df dataframe
-#' @param n number of rows to take, defaults to 20
+#'
 #'
 #'@export
-sdf_show <- function(df){
-  spark_dataframe(df) %>% invoke("show")
+sdf_head <- function(df){
+  spark_dataframe(df) %>% invoke("head")
 }
 
 
