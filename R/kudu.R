@@ -36,7 +36,7 @@ kudu_context <- function(sc,kudu_master) {
 #' 
 #' @export
 read_kudu_table <- function(sc,kudu_table) {
-  hc <- sc$hive_context
+  hc <- hive_context(sc)
   kudu_master <- sc$kudu_master
   options <- list("kudu.master"=kudu_master,"kudu.table"=kudu_table)
   df <- hc %>%
