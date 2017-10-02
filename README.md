@@ -2,7 +2,7 @@
 #### A Sparklyr extention for Kudu
 
 #### Introduction
-[Sparklyr](http://spark.rstudio.com/index.html) is an R interface for Apache Spark that is highly extensible. [Apache Kudu](http://kudu.apache.org/) is a new storage engine that enables fast analytics on fast data and fits use cases in the Hadoop ecosystem where you need to frequently update/delete data while also servicing analytical queries as it comes in (NRT). Kudusparklyr is a Sparklyr extension that leverages the [Kudu integration with Spark](https://github.com/cloudera/kudu/tree/master/java/kudu-spark) to make working with Kudu in an R environment easier. Usage requires Spark, Kudu, and Sparklyr and supports Spark 1.6 today. 
+[Sparklyr](http://spark.rstudio.com/index.html) is an R interface for Apache Spark that is highly extensible. [Apache Kudu](http://kudu.apache.org/) is a new storage engine that enables fast analytics on fast data and fits use cases in the Hadoop ecosystem where you need to frequently update/delete data while also servicing analytical queries as it comes in (NRT). Kudusparklyr is a Sparklyr extension that leverages the [Kudu integration with Spark](https://github.com/cloudera/kudu/tree/master/java/kudu-spark) to make working with Kudu in an R environment easier. Usage requires Spark, Kudu, and Sparklyr and supports Spark 2.x today. Spark 1.6 support has been deprecated, and may no longer work. 
 
 #### Installation
 Install through devtools:
@@ -24,6 +24,7 @@ library(kudusparklyr)
 options(kudu.version = "1.4.0")
 sc <- spark_connect(master="yarn-client",version="2.1", config = list(default = list(spark.yarn.keytab="/home/ec2-user/navi.keytab",spark.yarn.principal="navi@CLOUDERA.INTERNAL")))
 ```
+Support for Spark 1.6 is deprecated by the kudu/spark integration package that this depends on, so support for Spark 1.6 is also deprecated here as well. 
 
 #### Functions
 Create a KuduContext and append it to a sparklyr spark_connection object. 
@@ -192,4 +193,5 @@ kudu_table_exists(sc, 'batting_table')
 ```
 
 #### Limitations
+This package relies on Kudu/Spark integration that is found here(https://github.com/cloudera/kudu/tree/master/java/kudu-spark).
 
