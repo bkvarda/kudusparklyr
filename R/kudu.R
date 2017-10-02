@@ -16,7 +16,7 @@
 #'
 #' @export
 kudu_context <- function(sc,kudu_master) {
-  kc <- invoke_new(sc,"org.apache.kudu.spark.kudu.KuduContext",kudu_master)
+  kc <- invoke_new(sc,"org.apache.kudu.spark.kudu.KuduContext",kudu_master,spark_context(sc))
   new_sc <- sc
   new_sc$kudu_context = kc
   new_sc$kudu_master = kudu_master
@@ -248,6 +248,17 @@ kudu_delete_rows <- function(sc,df,kudu_table){
 #'@export
 sdf_head <- function(df){
   spark_dataframe(df) %>% invoke("head")
+}
+
+#' @title sdf_schema
+#' @description return the java representation of the df schema
+#' 
+#' @param df dataframe
+#'
+#'
+#'@export
+sdf_schema <- function(df){
+  spark_dataframe(df) %>% invoke("schema")
 }
 
 
