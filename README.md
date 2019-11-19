@@ -1,19 +1,21 @@
 ### Kudusparklyr
 #### A Sparklyr extention for Kudu
 
+It's a fork from https://github.com/bkvarda/kudusparklyr, because
+it's not actively maintained anymore and I needed newer versions
+(i.e. jars).
+
 #### Introduction
-[Sparklyr](http://spark.rstudio.com/index.html) is an R interface for Apache Spark that is highly extensible. [Apache Kudu](http://kudu.apache.org/) is a new storage engine that enables fast analytics on fast data and fits use cases in the Hadoop ecosystem where you need to frequently update/delete data while also servicing analytical queries as it comes in (NRT). Kudusparklyr is a Sparklyr extension that leverages the [Kudu integration with Spark](https://github.com/cloudera/kudu/tree/master/java/kudu-spark) to make working with Kudu in an R environment easier. Usage requires Spark, Kudu, and Sparklyr and supports Spark 2.x today. Spark 1.6 support has been deprecated, and may no longer work. 
+[Sparklyr](https://spark.rstudio.com/index.html) is an R interface for Apache Spark that is highly extensible. [Apache Kudu](https://kudu.apache.org/) is a new storage engine that enables fast analytics on fast data and fits use cases in the Hadoop ecosystem where you need to frequently update/delete data while also servicing analytical queries as it comes in (NRT). Kudusparklyr is a Sparklyr extension that leverages the [Kudu integration with Spark](https://github.com/cloudera/kudu/tree/master/java/kudu-spark) to make working with Kudu in an R environment easier. Usage requires Spark, Kudu, and Sparklyr and supports Spark 2.x today. Spark 1.6 support has been deprecated, and may no longer work.
 
 #### Installation
 Install through devtools:
 ```R
-library(devtools)
-install_github("bkvarda/kudusparklyr")
+remotes::install_github("nachti/kudusparklyr")
 ```
 Alternatively download the repo and load from local:
 ```R
-library(devtools)
-load_all('/path/to/kudusparklyr')
+pkgload::load_all('/path/to/kudusparklyr')
 ```
 
 #### Specifying Kudu version
@@ -193,5 +195,12 @@ kudu_table_exists(sc, 'batting_table')
 ```
 
 #### Limitations
-This package relies on Kudu/Spark integration that is found here(https://github.com/cloudera/kudu/tree/master/java/kudu-spark).
+This package relies on Kudu/Spark integration that is found here (https://github.com/cloudera/kudu/tree/master/java/kudu-spark).
 
+The necessary jars are downloaded from
+https://mvnrepository.com/artifact/org.apache.kudu/kudu-spark2
+and renamed manually due to the convention
+`sprintf("java/kudu-spark_%s-%s-%s.jar", spark_version,
+scala_version, kudu_version)`
+although the spark_version ist more or less irrelevant. It's
+stored in the `inst/java` directory of this package then.

@@ -12,6 +12,6 @@ add_sql_context(sc)
 \value{
 spark connection
 }
-\examples{
-not used
+\description{
+add_sql_context
 }

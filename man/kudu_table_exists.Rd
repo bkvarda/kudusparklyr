@@ -15,7 +15,7 @@ kudu_table_exists(sc, kudu_table)
 checks if a kudu table exists
 }
 \examples{
-#'  \dontrun{
+\dontrun{
 kudu_table_exists(sc, "table_name")
 }
 

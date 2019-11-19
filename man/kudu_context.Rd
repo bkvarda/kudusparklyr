@@ -7,9 +7,9 @@
 kudu_context(sc, kudu_master)
 }
 \arguments{
-\item{sc}{}
+\item{sc}{spark connection}
 
-\item{kudu_master}{}
+\item{kudu_master}{kudu master}
 }
 \description{
 creates kc kudu context
