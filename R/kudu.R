@@ -1,3 +1,4 @@
+# Kudu Sparklyr Extension
 # Intended to provide access to Kudu tables in Sparklyr
 #
 #' @import sparklyr
