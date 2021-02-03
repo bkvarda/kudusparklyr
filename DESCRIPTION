@@ -1,15 +1,17 @@
 Package: kudusparklyr
+Encoding: UTF-8
 Type: Package
 Title: Sparklyr extension for Kudu support
-Version: 0.1.0
-Date: 2016-08-11
-Author: Brandon Kvarda
-Maintainer: Brandon Kvarda <bjkvarda@gmail.com>
+Version: 0.1.1
+Date: 2019-11-19
+Authors@R: c(person("Brandon", "Kvarda", email = "bjkvarda@gmail.com",
+    role = c("aut","cre")), person("Gerhard", "Nachtmann",
+    email = "kpm.nachtmann@gmail.com", role = "ctb"))
 Depends:
     R (>= 3.0.0)
 Imports:
     sparklyr,
     magrittr
-Description: Sparklyr extension for Kudu support
-License: MIT
-RoxygenNote: 6.0.1
+Description: Sparklyr extension for Kudu support.
+License: MIT + file LICENSE
+RoxygenNote: 6.1.1

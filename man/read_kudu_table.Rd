@@ -15,7 +15,7 @@ read_kudu_table(sc, kudu_table)
 reads a kudu table into spark
 }
 \examples{
-#'  \dontrun{
+\dontrun{
 table <- read_kudu_table(sc, "table_name")
 }
 

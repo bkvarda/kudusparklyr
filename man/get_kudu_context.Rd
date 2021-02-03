@@ -12,3 +12,6 @@ get_kudu_context(sc)
 \value{
 kudu context object
 }
+\description{
+get_kudu_context
+}
